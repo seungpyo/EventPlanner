@@ -24,6 +24,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.kakao.auth.KakaoSDK;
 
 public class GenereicSignInActivity extends AppCompatActivity {
     private static final String TAG = "GoogleSignInActivity";
@@ -50,6 +51,8 @@ public class GenereicSignInActivity extends AppCompatActivity {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         mAuth = FirebaseAuth.getInstance();
+
+
         findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -79,8 +82,10 @@ public class GenereicSignInActivity extends AppCompatActivity {
     }
 
     private void kakaoSignIn() {
+        Log.d(TAG, "Kakao signin triggered!!!!");
         Intent kakaoSignInIntent = new Intent(this, KakaoLoginActivity.class);
         startActivityForResult(kakaoSignInIntent, KAKAO_SIGN_IN);
+        finish();
     }
 
     @Override
@@ -91,6 +96,8 @@ public class GenereicSignInActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
         }
+
+        finish();
     }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {

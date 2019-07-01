@@ -20,6 +20,9 @@ public class KakaoLoginActivity extends Activity {
      */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        String TAG = "KakaoLogin::onCreate";
+        Log.d(TAG, "onCreate");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
