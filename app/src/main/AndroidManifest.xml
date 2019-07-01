@@ -19,9 +19,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GoogleSignInActivity">
+        <activity android:name=".GenereicSignInActivity">
 
         </activity>
+
+        <activity android:name=".KakaoLoginActivity">
+
+        </activity>
+
 
         <service
             android:name=".MyFirebaseMessagingService"
@@ -36,5 +41,6 @@
             android:value="@string/kakao_app_key" />
 
     </application>
+
 
 </manifest>

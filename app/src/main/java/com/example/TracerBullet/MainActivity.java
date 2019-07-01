@@ -47,19 +47,13 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private SessionCallback callback;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getHashKey();
-
-        KakaoSDK.init(new GlobalApplication.KakaoSDKAdapter());
-
         Intent signInActityIntent;
-        signInActityIntent = new Intent(this, GoogleSignInActivity.class);
+        signInActityIntent = new Intent(this, GenereicSignInActivity.class);
         startActivity(signInActityIntent);
 
 
@@ -144,45 +138,6 @@ public class MainActivity extends AppCompatActivity {
         return peMap;
     }
 
-    private class SessionCallback implements ISessionCallback {
 
-        @Override
-        public void onSessionOpened() {
-            redirectSignupActivity();
-        }
-
-        @Override
-        public void onSessionOpenFailed(KakaoException exception) {
-            if(exception != null) {
-                Logger.e(exception);
-            }
-        }
-    }
-    protected void redirectSignupActivity() {
-        final Intent intent = new Intent(this, KakaoSignupActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    private void getHashKey(){
-        PackageInfo packageInfo = null;
-        try {
-            packageInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (packageInfo == null)
-            Log.e("KeyHash", "KeyHash:null");
-
-        for (Signature signature : packageInfo.signatures) {
-            try {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            } catch (NoSuchAlgorithmException e) {
-                Log.e("KeyHash", "Unable to get MessageDigest. signature=" + signature, e);
-            }
-        }
-    }
 
 }

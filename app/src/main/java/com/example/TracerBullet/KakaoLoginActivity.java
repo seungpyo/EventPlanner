@@ -3,38 +3,37 @@ package com.example.TracerBullet;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
-import com.example.TracerBullet.R;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
 
-/**
- * Created by hp on 2016-01-26.
- */
-public class KakaoSignInActivity  extends Activity {
+public class KakaoLoginActivity extends Activity {
+    private SessionCallback callback;
 
-    private SessionCallback callback;      //콜백 선언
-
+    /**
+     * 로그인 버튼을 클릭 했을시 access token을 요청하도록 설정한다.
+     *
+     * @param savedInstanceState 기존 session 정보가 저장된 객체
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
 
-        callback = new SessionCallback();                  // 이 두개의 함수 중요함
+        callback = new SessionCallback();
         Session.getCurrentSession().addCallback(callback);
-
+        Session.getCurrentSession().checkAndImplicitOpen();
     }
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
             return;
         }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -48,7 +47,9 @@ public class KakaoSignInActivity  extends Activity {
 
         @Override
         public void onSessionOpened() {
-            redirectSignupActivity();  // 세션 연결성공 시 redirectSignupActivity() 호출
+            String TAG = "onSessionOpened";
+            Log.d(TAG, "Session opened");
+            // redirectSignupActivity();
         }
 
         @Override
@@ -56,15 +57,13 @@ public class KakaoSignInActivity  extends Activity {
             if(exception != null) {
                 Logger.e(exception);
             }
-            setContentView(R.layout.activity_main); // 세션 연결이 실패했을때
-        }                                            // 로그인화면을 다시 불러옴
+        }
     }
-
-    protected void redirectSignupActivity() {       //세션 연결 성공 시 SignupActivity로 넘김
+    /*
+    protected void redirectSignupActivity() {
         final Intent intent = new Intent(this, KakaoSignupActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         finish();
-    }
+    }*/
 
 }

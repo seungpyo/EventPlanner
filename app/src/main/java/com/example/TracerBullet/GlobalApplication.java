@@ -3,8 +3,6 @@ package com.example.TracerBullet;
 import android.app.Application;
 import android.content.Context;
 
-import androidx.annotation.Nullable;
-
 import com.kakao.auth.ApprovalType;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.IApplicationConfig;
@@ -14,14 +12,15 @@ import com.kakao.auth.KakaoSDK;
 
 public class GlobalApplication extends Application {
 
-    private static GlobalApplication instance;
-    public static final GlobalApplication getGlobalApplicationContext() {
-        if (instance == null)
+    private static volatile GlobalApplication instance = null;
+
+    public static GlobalApplication getGlobalApplicationContext() {
+        if(instance == null)
             throw new IllegalStateException("this application does not inherit com.kakao.GlobalApplication");
         return instance;
     }
 
-    protected static class KakaoSDKAdapter extends KakaoAdapter {
+    private static class KakaoSDKAdapter extends KakaoAdapter {
         /**
          * Session Config에 대해서는 default값들이 존재한다.
          * 필요한 상황에서만 override해서 사용하면 됨.
@@ -66,7 +65,19 @@ public class GlobalApplication extends Application {
                 }
             };
         }
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        instance = this;
+        KakaoSDK.init(new KakaoSDKAdapter());
 
     }
 
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        instance = null;
+    }
 }

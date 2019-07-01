@@ -25,18 +25,22 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class GoogleSignInActivity extends AppCompatActivity {
+public class GenereicSignInActivity extends AppCompatActivity {
     private static final String TAG = "GoogleSignInActivity";
 
 
     GoogleSignInClient mGoogleSignInClient;
     private static int RC_SIGN_IN = 100;
+    private static int KAKAO_SIGN_IN = 200;
     private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Log.d (TAG, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 // .requestIdToken(getString(R.string.default_web_client_id))
@@ -52,6 +56,13 @@ public class GoogleSignInActivity extends AppCompatActivity {
                 signIn();
             }
         });
+        findViewById(R.id.com_kakao_login).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                kakaoSignIn();
+            }
+        });
+
 
     }
 
@@ -65,6 +76,11 @@ public class GoogleSignInActivity extends AppCompatActivity {
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    private void kakaoSignIn() {
+        Intent kakaoSignInIntent = new Intent(this, KakaoLoginActivity.class);
+        startActivityForResult(kakaoSignInIntent, KAKAO_SIGN_IN);
     }
 
     @Override
