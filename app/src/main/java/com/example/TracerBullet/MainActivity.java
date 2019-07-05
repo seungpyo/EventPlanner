@@ -29,6 +29,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.*;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.KakaoSDK;
 import com.kakao.auth.Session;
@@ -59,6 +61,26 @@ public class MainActivity extends AppCompatActivity {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference partyEvents = db.collection("partyEvents");
 
+
+
+        FirebaseInstanceId.getInstance().getInstanceId()
+            .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                @Override
+                public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                    if (!task.isSuccessful()) {
+                        Log.w(TAG, "getInstanceId failed", task.getException());
+                        return;
+                    }
+
+                    // Get new Instance ID token
+                    String token = task.getResult().getToken();
+
+                    // Log and toast
+                    String msg = getString(R.string.msg_token_fmt, token);
+                    Log.d(TAG, msg);
+                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                }
+            });
 
 
         Button submitBtn = (Button) findViewById(R.id.submitBtn);
@@ -136,6 +158,8 @@ public class MainActivity extends AppCompatActivity {
 
         return peMap;
     }
+
+
 
 
 
