@@ -1,6 +1,8 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-
+admin.initializeApp();
+// admin.firestore();
+var topic = 'testTopic';
 
 exports.createPartyEvent = functions.firestore
 	.document("partyEvents/{partyEventId}")
@@ -8,9 +10,12 @@ exports.createPartyEvent = functions.firestore
 		const newPartyEvent = snap.data();
 		console.log("Doc created");
 		var msg = {
-			type: "CREATED",
-			partyEvent: newPartyEvent
-		}
+			payload: {
+				type: "CREATED",
+				partyEvent: newPartyEvent
+			},
+			topic: topic
+		};
 		admin.messaging().send(msg)
 			.then((response)=> {
 				console.log("Sent CREATED, got response:", response);
@@ -27,8 +32,11 @@ exports.deletePartyEvent = functions.firestore
 		const deletedPartyEvent = snap.data();
 		console.log("Doc deleted");
 		var msg = {
-			type: "DELETED",
-			partyEvent: deletedPartyEvent
+			payload: {
+				type: "DELETED",
+				partyEvent: deletedPartyEvent
+			},
+			topic: topic
 		};
 		admin.messaging().send(msg)
 		.then((response)=> {
@@ -47,8 +55,11 @@ exports.updatePartyEvent = functions.firestore
 		const prevPartyEvent = changed.before.data();
 		console.log("Doc updated");
 		var msg = {
-			type: "UPDATED",
-			partyEvent: newPartyEvent
+			payload: {
+				type: "UPDATED",
+				partyEvent: newPartyEvent
+			},
+			topic: topic
 		};
 		admin.messaging().send(msg)
 			.then((response)=> {
